@@ -4,6 +4,8 @@ import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { saveTodos } from "@/api/tasks";
+import { useState } from "react";
 
 const schema = z
   .object({
@@ -11,21 +13,25 @@ const schema = z
   })
   .required();
 
-type Form = z.infer<typeof schema>;
+export declare type Task = z.infer<typeof schema>;
 
 export default function Home() {
   const { user } = useUser();
+  const [tasksList, setTasksList] = useState([]);
 
   const {
     reset,
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<Form>({ resolver: zodResolver(schema) });
+  } = useForm<Task>({ resolver: zodResolver(schema) });
 
-  const onSubmit: SubmitHandler<Form> = async (data) => {
+  const onSubmit: SubmitHandler<Task> = async (data) => {
     try {
-      console.log("hola");
+      if (user?.id) {
+        const task = data;
+        saveTodos(user.id, task);
+      }
     } catch (error) {}
   };
 
