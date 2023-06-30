@@ -1,11 +1,11 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { saveTodos } from "@/api/tasks";
-import { useState } from "react";
+import { getTodos, saveTodos } from "@/api/tasks";
 
 const schema = z
   .object({
@@ -17,7 +17,16 @@ export declare type Task = z.infer<typeof schema>;
 
 export default function Home() {
   const { user } = useUser();
-  const [tasksList, setTasksList] = useState([]);
+  const [tasksList, setTasksList] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (user?.id) {
+      getTodos(user.id).then((data) => {
+        const todosArr = data?.docs.map((todo) => todo.data()) as Task[];
+        setTasksList(todosArr);
+      });
+    }
+  }, [user?.id]);
 
   const {
     reset,
@@ -72,6 +81,12 @@ export default function Home() {
           </button>
         </Form.Submit>
       </Form.Root>
+
+      <div>
+        {tasksList.map((todo) => {
+          return <p key={todo.task}>{todo.task}</p>;
+        })}
+      </div>
     </main>
   );
 }
