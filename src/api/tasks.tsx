@@ -40,3 +40,5 @@ export async function deleteTask(userId: string, taskId: string) {
     console.error(error);
   }
 }
+
+export async function updateTask() {}

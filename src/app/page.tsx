@@ -15,11 +15,18 @@ const schema = z
   .required();
 
 export declare type TaskForm = z.infer<typeof schema>;
-type Task = TaskForm & { id: string };
+type Task = TaskForm & { id: string; status: string };
 
 export default function Home() {
   const { user } = useUser();
   const [tasksList, setTasksList] = useState<Task[]>([]);
+
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<TaskForm>({ resolver: zodResolver(schema) });
 
   useEffect(() => {
     if (user?.id) {
@@ -33,17 +40,25 @@ export default function Home() {
     }
   }, [user?.id]);
 
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<TaskForm>({ resolver: zodResolver(schema) });
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
   const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
       if (user?.id) {
-        await saveTodos(user.id, data);
+        const doc = await saveTodos(user.id, data);
+        if (doc?.id) {
+          const task = {
+            id: doc?.id,
+            status: "pending",
+            ...data,
+          };
+
+          setTasksList([task, ...tasksList]);
+        }
       }
     } catch (error) {}
   };
@@ -81,7 +96,6 @@ export default function Home() {
             className=" rounded-full bg-slate-500 text-white font-bold w-12 h-10"
           >
             +
-            {/* {isSubmitting ? <p>Creating product</p> : <p>Post Product</p>} */}
           </button>
         </Form.Submit>
       </Form.Root>
@@ -100,6 +114,12 @@ export default function Home() {
                     try {
                       if (user?.id) {
                         await deleteTask(user.id, todo.id);
+                        const index = tasksList.findIndex(
+                          (e) => e.id === todo.id
+                        );
+                        let newArray = [...tasksList];
+                        newArray.splice(index, 1);
+                        setTasksList([...newArray]);
                       }
                     } catch (error) {}
                   }}
