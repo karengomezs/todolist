@@ -5,7 +5,7 @@ import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { getTodos, saveTodos } from "@/api/tasks";
+import { deleteTask, getTodos, saveTodos } from "@/api/tasks";
 import { User } from "@clerk/nextjs/dist/types/server";
 
 const schema = z
@@ -99,7 +99,7 @@ export default function Home() {
                   onClick={async () => {
                     try {
                       if (user?.id) {
-                        // await deleteTask(user.id, todo.id);
+                        await deleteTask(user.id, todo.id);
                       }
                     } catch (error) {}
                   }}

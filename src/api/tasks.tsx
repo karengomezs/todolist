@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  doc,
   getDocs,
   query,
   where,
@@ -32,13 +33,9 @@ export async function getTodos(id: string) {
   }
 }
 
-export async function deleteTask(userId: string, tasktId: string) {
+export async function deleteTask(userId: string, taskId: string) {
   try {
-    const refs = collection(db, "todos", userId, "tasksCollection");
-    const q = query(refs, where("id", "==", tasktId));
-    const results = await getDocs(q);
-    const docRef = results.docs[0].ref;
-    await deleteDoc(docRef);
+    return await deleteDoc(doc(db, "todos", userId, "tasksCollection", taskId));
   } catch (error) {
     console.error(error);
   }
