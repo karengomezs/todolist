@@ -5,17 +5,18 @@ import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { deleteTask, getTodos, saveTodos } from "@/api/tasks";
+import { deleteTask, getTodos, saveTodos, updateTask } from "@/api/tasks";
 import { User } from "@clerk/nextjs/dist/types/server";
 
 const schema = z
   .object({
     task: z.string().min(3, { message: "Must be longer than 3 characters" }),
+    status: z.string().optional(),
   })
   .required();
 
 export declare type TaskForm = z.infer<typeof schema>;
-type Task = TaskForm & { id: string; status: string };
+type Task = TaskForm & { id: string };
 
 export default function Home() {
   const { user } = useUser();
@@ -26,7 +27,14 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors, isSubmitSuccessful },
-  } = useForm<TaskForm>({ resolver: zodResolver(schema) });
+  } = useForm<TaskForm>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      status: "pending",
+    },
+  });
+
+  console.log(errors);
 
   useEffect(() => {
     if (user?.id) {
@@ -53,7 +61,7 @@ export default function Home() {
         if (doc?.id) {
           const task = {
             id: doc?.id,
-            status: "pending",
+
             ...data,
           };
 
@@ -106,9 +114,21 @@ export default function Home() {
 
           return (
             <div className="flex justify-between" key={todo.task}>
-              <p>{todo.task}</p>
+              <p className={`${todo.status === "done" ? "line-through" : ""}`}>
+                {todo.task}
+              </p>
               <div className="flex gap-4">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  defaultChecked={todo.status === "done"}
+                  onChange={(e) => {
+                    if (e.target.checked && user?.id) {
+                      updateTask(user.id, todo.id, "done");
+                    } else if (user?.id) {
+                      updateTask(user.id, todo.id, "pending");
+                    }
+                  }}
+                />
                 <button
                   onClick={async () => {
                     try {

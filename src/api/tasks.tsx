@@ -7,6 +7,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
   where,
   writeBatch,
 } from "firebase/firestore";
@@ -41,4 +42,15 @@ export async function deleteTask(userId: string, taskId: string) {
   }
 }
 
-export async function updateTask() {}
+export async function updateTask(
+  userId: string,
+  taskId: string,
+  status: "pending" | "done"
+) {
+  try {
+    const docRef = doc(db, "todos", userId, "tasksCollection", taskId);
+    await updateDoc(docRef, {
+      status: status,
+    });
+  } catch (error) {}
+}
