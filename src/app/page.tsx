@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { getTodos, saveTodos } from "@/api/tasks";
+import { User } from "@clerk/nextjs/dist/types/server";
 
 const schema = z
   .object({
@@ -13,7 +14,8 @@ const schema = z
   })
   .required();
 
-export declare type Task = z.infer<typeof schema>;
+export declare type TaskForm = z.infer<typeof schema>;
+type Task = TaskForm & { id: string };
 
 export default function Home() {
   const { user } = useUser();
@@ -22,7 +24,10 @@ export default function Home() {
   useEffect(() => {
     if (user?.id) {
       getTodos(user.id).then((data) => {
-        const todosArr = data?.docs.map((todo) => todo.data()) as Task[];
+        const todosArr = data?.docs.map((todo) => {
+          const data = todo.data();
+          return { id: todo.id, ...data };
+        }) as Task[];
         setTasksList(todosArr);
       });
     }
@@ -33,13 +38,12 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<Task>({ resolver: zodResolver(schema) });
+  } = useForm<TaskForm>({ resolver: zodResolver(schema) });
 
-  const onSubmit: SubmitHandler<Task> = async (data) => {
+  const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
       if (user?.id) {
-        const task = data;
-        saveTodos(user.id, task);
+        await saveTodos(user.id, data);
       }
     } catch (error) {}
   };
@@ -84,12 +88,24 @@ export default function Home() {
 
       <div>
         {tasksList.map((todo) => {
+          console.log(todo);
+
           return (
             <div className="flex justify-between" key={todo.task}>
               <p>{todo.task}</p>
               <div className="flex gap-4">
                 <input type="checkbox" />
-                <button>🗑️</button>
+                <button
+                  onClick={async () => {
+                    try {
+                      if (user?.id) {
+                        // await deleteTask(user.id, todo.id);
+                      }
+                    } catch (error) {}
+                  }}
+                >
+                  🗑️
+                </button>
               </div>
             </div>
           );

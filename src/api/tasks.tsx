@@ -1,8 +1,16 @@
 import { db } from "@/app/firebase";
-import { Task } from "@/app/page";
-import { addDoc, collection, getDocs, writeBatch } from "firebase/firestore";
+import { TaskForm } from "@/app/page";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 
-export async function saveTodos(id: string, task: Task) {
+export async function saveTodos(id: string, task: TaskForm) {
   try {
     const docRef = await addDoc(
       collection(db, "todos", id, "tasksCollection"),
@@ -24,17 +32,13 @@ export async function getTodos(id: string) {
   }
 }
 
-export async function deleteProductsCart(userId: string) {
+export async function deleteTask(userId: string, tasktId: string) {
   try {
-    const batch = writeBatch(db);
-
     const refs = collection(db, "todos", userId, "tasksCollection");
-    const results = await getDocs(refs);
-
-    results.forEach((product) => {
-      batch.delete(product.ref);
-    });
-    await batch.commit();
+    const q = query(refs, where("id", "==", tasktId));
+    const results = await getDocs(q);
+    const docRef = results.docs[0].ref;
+    await deleteDoc(docRef);
   } catch (error) {
     console.error(error);
   }
