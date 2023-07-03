@@ -34,8 +34,6 @@ export default function Home() {
     },
   });
 
-  console.log(errors);
-
   useEffect(() => {
     if (user?.id) {
       getTodos(user.id).then((data) => {
@@ -70,7 +68,7 @@ export default function Home() {
       }
     } catch (error) {}
   };
-
+  console.log({ tasksList });
   return (
     <main className="flex flex-col gap-5 px-6 mt-6 w-full">
       <p className="font-extrabold text-3xl text-slate-800">
@@ -110,8 +108,6 @@ export default function Home() {
 
       <div>
         {tasksList.map((todo) => {
-          console.log(todo);
-
           return (
             <div className="flex justify-between" key={todo.task}>
               <p className={`${todo.status === "done" ? "line-through" : ""}`}>
@@ -121,11 +117,38 @@ export default function Home() {
                 <input
                   type="checkbox"
                   defaultChecked={todo.status === "done"}
-                  onChange={(e) => {
+                  onChange={async (e) => {
+                    const todoAtrapado = tasksList.find((task) => {
+                      return task.id === todo.id;
+                    });
+
                     if (e.target.checked && user?.id) {
-                      updateTask(user.id, todo.id, "done");
+                      // await updateTask(user.id, todo.id, "done");
+
+                      if (todoAtrapado?.status) {
+                        todoAtrapado.status = "done";
+                        const withoutRepeatTask = tasksList.filter((task) => {
+                          return task.id !== todoAtrapado.id;
+                        });
+                        const newListTasks = [
+                          todoAtrapado,
+                          ...withoutRepeatTask,
+                        ];
+                        setTasksList(newListTasks);
+                      }
                     } else if (user?.id) {
-                      updateTask(user.id, todo.id, "pending");
+                      // await updateTask(user.id, todo.id, "pending");
+                      if (todoAtrapado?.status) {
+                        todoAtrapado.status = "pending";
+                        const withoutRepeatTask = tasksList.filter((task) => {
+                          return task.id !== todoAtrapado.id;
+                        });
+                        const newListTasks = [
+                          todoAtrapado,
+                          ...withoutRepeatTask,
+                        ];
+                        setTasksList(newListTasks);
+                      }
                     }
                   }}
                 />
