@@ -84,7 +84,15 @@ export default function Home() {
 
       <div>
         {tasksList.map((todo) => {
-          return <p key={todo.task}>{todo.task}</p>;
+          return (
+            <div className="flex justify-between" key={todo.task}>
+              <p>{todo.task}</p>
+              <div className="flex gap-4">
+                <input type="checkbox" />
+                <button>🗑️</button>
+              </div>
+            </div>
+          );
         })}
       </div>
     </main>
