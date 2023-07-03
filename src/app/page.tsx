@@ -68,7 +68,7 @@ export default function Home() {
       }
     } catch (error) {}
   };
-  console.log({ tasksList });
+
   return (
     <main className="flex flex-col gap-5 px-6 mt-6 w-full">
       <p className="font-extrabold text-3xl text-slate-800">
@@ -109,7 +109,7 @@ export default function Home() {
       <div>
         {tasksList.map((todo) => {
           return (
-            <div className="flex justify-between" key={todo.task}>
+            <div className="flex justify-between" key={todo.id}>
               <p className={`${todo.status === "done" ? "line-through" : ""}`}>
                 {todo.task}
               </p>
@@ -123,7 +123,7 @@ export default function Home() {
                     });
 
                     if (e.target.checked && user?.id) {
-                      // await updateTask(user.id, todo.id, "done");
+                      await updateTask(user.id, todo.id, "done");
 
                       if (todoAtrapado?.status) {
                         todoAtrapado.status = "done";
@@ -131,13 +131,13 @@ export default function Home() {
                           return task.id !== todoAtrapado.id;
                         });
                         const newListTasks = [
-                          todoAtrapado,
                           ...withoutRepeatTask,
+                          todoAtrapado,
                         ];
                         setTasksList(newListTasks);
                       }
                     } else if (user?.id) {
-                      // await updateTask(user.id, todo.id, "pending");
+                      await updateTask(user.id, todo.id, "pending");
                       if (todoAtrapado?.status) {
                         todoAtrapado.status = "pending";
                         const withoutRepeatTask = tasksList.filter((task) => {
