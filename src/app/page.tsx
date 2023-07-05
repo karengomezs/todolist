@@ -5,11 +5,18 @@ import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { deleteTask, getTodos, saveTodos, updateTask } from "@/api/tasks";
+import {
+  deleteTask,
+  getTodos,
+  saveTodos,
+  updateStatusTask,
+  updateTask,
+} from "@/api/tasks";
 import { User } from "@clerk/nextjs/dist/types/server";
 
 const schema = z
   .object({
+    id: z.string(),
     task: z.string().min(3, { message: "Must be longer than 3 characters" }),
     status: z.string().optional(),
   })
@@ -21,11 +28,13 @@ type Task = TaskForm & { id: string };
 export default function Home() {
   const { user } = useUser();
   const [tasksList, setTasksList] = useState<Task[]>([]);
+  const [edit, setEdit] = useState(false);
 
   const {
     reset,
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitSuccessful },
   } = useForm<TaskForm>({
     resolver: zodResolver(schema),
@@ -54,15 +63,19 @@ export default function Home() {
 
   const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
-      if (user?.id) {
+      const isEdit = Boolean(data.id);
+
+      if (isEdit && user?.id) {
+        await updateTask(user?.id, data.id, data.task);
+      }
+
+      if (user?.id && !isEdit) {
         const doc = await saveTodos(user.id, data);
         if (doc?.id) {
           const task = {
-            id: doc?.id,
-
             ...data,
+            id: doc?.id,
           };
-
           setTasksList([task, ...tasksList]);
         }
       }
@@ -114,6 +127,15 @@ export default function Home() {
                 {todo.task}
               </p>
               <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setValue("task", todo.task);
+                    setValue("id", todo.id);
+                    setValue("status", todo.status);
+                  }}
+                >
+                  ✏️
+                </button>
                 <input
                   type="checkbox"
                   defaultChecked={todo.status === "done"}
@@ -123,7 +145,7 @@ export default function Home() {
                     });
 
                     if (e.target.checked && user?.id) {
-                      await updateTask(user.id, todo.id, "done");
+                      await updateStatusTask(user.id, todo.id, "done");
 
                       if (todoAtrapado?.status) {
                         todoAtrapado.status = "done";

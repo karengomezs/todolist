@@ -44,7 +44,7 @@ export async function deleteTask(userId: string, taskId: string) {
   }
 }
 
-export async function updateTask(
+export async function updateStatusTask(
   userId: string,
   taskId: string,
   status: "pending" | "done"
@@ -53,6 +53,15 @@ export async function updateTask(
     const docRef = doc(db, "todos", userId, "tasksCollection", taskId);
     await updateDoc(docRef, {
       status: status,
+    });
+  } catch (error) {}
+}
+
+export async function updateTask(userId: string, taskId: string, task: string) {
+  try {
+    const docRef = doc(db, "todos", userId, "tasksCollection", taskId);
+    await updateDoc(docRef, {
+      task: task,
     });
   } catch (error) {}
 }
