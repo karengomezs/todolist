@@ -82,11 +82,15 @@ export default function Home() {
     } catch (error) {}
   };
 
+  const date = new Date();
+  const today = date.toDateString();
+
   return (
-    <main className="flex flex-col gap-5 px-6 mt-6 w-full">
+    <main className="flex flex-col gap-5 px-6 mt-6 w-full md:px-56">
       <p className="font-extrabold text-3xl text-slate-800">
         What's up, {user?.firstName}!
       </p>
+      <p>Today's {today}</p>
 
       <Form.Root
         className="flex gap-4 w-full"
