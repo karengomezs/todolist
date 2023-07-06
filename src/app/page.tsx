@@ -12,7 +12,6 @@ import {
   updateStatusTask,
   updateTask,
 } from "@/api/tasks";
-import { User } from "@clerk/nextjs/dist/types/server";
 
 const schema = z.object({
   id: z.string().optional(),
@@ -40,8 +39,6 @@ export default function Home() {
     },
   });
 
-  console.log(errors);
-
   useEffect(() => {
     if (user?.id) {
       getTodos(user.id).then((data) => {
@@ -63,7 +60,6 @@ export default function Home() {
   const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
       const isEdit = Boolean(data.id);
-      console.log(isEdit);
 
       if (isEdit && user?.id && data.id) {
         await updateTask(user?.id, data.id, data.task);
