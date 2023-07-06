@@ -14,13 +14,11 @@ import {
 } from "@/api/tasks";
 import { User } from "@clerk/nextjs/dist/types/server";
 
-const schema = z
-  .object({
-    id: z.string(),
-    task: z.string().min(3, { message: "Must be longer than 3 characters" }),
-    status: z.string().optional(),
-  })
-  .required();
+const schema = z.object({
+  id: z.string().optional(),
+  task: z.string().min(3, { message: "Must be longer than 3 characters" }),
+  status: z.string().optional(),
+});
 
 export declare type TaskForm = z.infer<typeof schema>;
 type Task = TaskForm & { id: string };
@@ -28,7 +26,6 @@ type Task = TaskForm & { id: string };
 export default function Home() {
   const { user } = useUser();
   const [tasksList, setTasksList] = useState<Task[]>([]);
-  const [edit, setEdit] = useState(false);
 
   const {
     reset,
@@ -42,6 +39,8 @@ export default function Home() {
       status: "pending",
     },
   });
+
+  console.log(errors);
 
   useEffect(() => {
     if (user?.id) {
@@ -64,9 +63,14 @@ export default function Home() {
   const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
       const isEdit = Boolean(data.id);
+      console.log(isEdit);
 
-      if (isEdit && user?.id) {
+      if (isEdit && user?.id && data.id) {
         await updateTask(user?.id, data.id, data.task);
+        const newArr = [...tasksList];
+        const index = newArr.findIndex((e) => e.id === data.id);
+        newArr[index].task = data.task;
+        setTasksList(newArr);
       }
 
       if (user?.id && !isEdit) {
