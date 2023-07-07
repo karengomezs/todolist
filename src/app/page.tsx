@@ -86,7 +86,7 @@ export default function Home() {
   const today = date.toDateString();
 
   return (
-    <main className="flex flex-col gap-5 px-6 mt-6 w-full md:px-56">
+    <main className="bg-gray-950 h-screen flex flex-col gap-5 px-6  w-full md:px-56">
       <p className="font-extrabold text-3xl text-slate-800">
         What's up, {user?.firstName}!
       </p>
@@ -100,6 +100,7 @@ export default function Home() {
           <Form.Control asChild>
             <input
               {...register("task")}
+              placeholder="What do you want to do?"
               className="flex-1 p-2 rounded-md border border-slate-300 bg-slate-100"
             />
           </Form.Control>
