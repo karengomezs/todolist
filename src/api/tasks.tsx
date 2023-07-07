@@ -52,7 +52,7 @@ export async function updateStatusTask(
   try {
     const docRef = doc(db, "todos", userId, "tasksCollection", taskId);
     await updateDoc(docRef, {
-      status: status,
+      status,
     });
   } catch (error) {}
 }
