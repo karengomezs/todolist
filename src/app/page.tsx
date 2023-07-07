@@ -131,7 +131,11 @@ export default function Home() {
               className="flex-1 p-2 font-bold text-lg text-white rounded-md bg-orange-500"
               key={todo.id}
             >
-              <p className={`${todo.status === "done" ? "line-through" : ""} `}>
+              <p
+                className={`${
+                  todo.status === "done" ? "line-through" : ""
+                } pb-5`}
+              >
                 {todo.task}
               </p>
               <div className="flex items-center gap-4">
