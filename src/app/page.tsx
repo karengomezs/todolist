@@ -86,11 +86,11 @@ export default function Home() {
   const today = date.toDateString();
 
   return (
-    <main className="bg-gray-950 h-screen flex flex-col gap-5 px-6  w-full md:px-56">
-      <p className="font-extrabold text-3xl text-slate-800">
+    <main className="bg-slate-950 h-screen flex flex-col gap-5 px-6 pt-14 w-full md:px-56">
+      <p className="font-extrabold text-4xl text-slate-200">
         What's up, {user?.firstName}!
       </p>
-      <p>Today's {today}</p>
+      <p className="text-orange-500">Today's {today}</p>
 
       <Form.Root
         className="flex gap-4 w-full"
@@ -117,17 +117,17 @@ export default function Home() {
           <button
             // disabled={isSubmitting}
             type="submit"
-            className=" rounded-full bg-slate-500 text-white font-bold w-12 h-10"
+            className=" rounded-full bg-orange-500 text-white font-bold w-12 h-10"
           >
             +
           </button>
         </Form.Submit>
       </Form.Root>
 
-      <div>
+      <div className="flex flex-wrap gap-3 my-10 p-3 h-full bg-slate-900 rounded-md">
         {tasksList.map((todo) => {
           return (
-            <div className="flex justify-between" key={todo.id}>
+            <div className="flex-1 rounded-md h-32 bg-orange-500" key={todo.id}>
               <p className={`${todo.status === "done" ? "line-through" : ""}`}>
                 {todo.task}
               </p>
