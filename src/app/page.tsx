@@ -85,6 +85,14 @@ export default function Home() {
   const date = new Date();
   const today = date.toDateString();
 
+  const doneTasks = tasksList.filter((task) => {
+    return task.status === "done";
+  });
+
+  const pendingTasks = tasksList.filter((task) => {
+    return task.status === "pending";
+  });
+
   return (
     <main className="bg-slate-950 h-screen flex flex-col gap-5 px-6 pt-14 w-full md:px-56">
       <p className="font-extrabold text-4xl text-white">
@@ -124,7 +132,22 @@ export default function Home() {
         </Form.Submit>
       </Form.Root>
 
-      <div className="flex flex-wrap gap-3 my-10 p-3  bg-slate-900 rounded-md">
+      <div className="flex gap-3 mt-5">
+        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+          Todos:
+          <span className="text-white"> {tasksList.length}</span>
+        </p>
+        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+          Done:
+          <span className="text-white"> {doneTasks.length}</span>
+        </p>
+        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+          Pending:
+          <span className="text-white"> {pendingTasks.length}</span>
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-3 mt-5 p-3 bg-slate-900 rounded-md">
         {tasksList.map((todo) => {
           return (
             <div
