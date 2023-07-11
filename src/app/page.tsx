@@ -57,7 +57,7 @@ export default function Home() {
     if (isSubmitSuccessful) {
       reset();
     }
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   const onSubmit: SubmitHandler<TaskForm> = async (data) => {
     try {
