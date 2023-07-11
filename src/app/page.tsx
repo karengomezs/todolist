@@ -96,8 +96,16 @@ export default function Home() {
   });
 
   return (
-    <main className="bg-slate-950 h-full flex flex-col gap-5 px-6 py-14 w-full md:px-56">
-      <p className="font-extrabold text-4xl text-white">
+    <main
+      className={`${
+        themeState.theme === true ? "bg-slate-950" : "bg-slate-100"
+      }  h-screen flex flex-col gap-5 px-6 py-14 w-full md:px-56`}
+    >
+      <p
+        className={`font-extrabold text-4xl ${
+          themeState.theme === true ? "text-white" : "text-slate-950"
+        } `}
+      >
         What's up, {user?.firstName}!
       </p>
       <p className="text-orange-500">Today's {today}</p>
@@ -134,18 +142,26 @@ export default function Home() {
         </Form.Submit>
       </Form.Root>
 
-      <div className="flex gap-3 mt-5">
-        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+      <div
+        className={`flex gap-3 mt-5 [&>p]:rounded-md [&>p]:p-2 [&>p]:text-orange-500 [&>p]:font-bold ${
+          themeState.theme ? "[&>p]:bg-slate-900" : "[&>p]:bg-slate-300"
+        } ${
+          themeState.theme
+            ? "[&>p>span]:text-white"
+            : "[&>p>span]:text-slate-950"
+        } `}
+      >
+        <p className=" ">
           Todos:
-          <span className="text-white"> {tasksList.length}</span>
+          <span> {tasksList.length}</span>
         </p>
-        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+        <p className=" ">
           Done:
-          <span className="text-white"> {doneTasks.length}</span>
+          <span> {doneTasks.length}</span>
         </p>
-        <p className="p-2 bg-slate-900 rounded-md text-orange-500 font-bold">
+        <p className=" ">
           Pending:
-          <span className="text-white"> {pendingTasks.length}</span>
+          <span> {pendingTasks.length}</span>
         </p>
       </div>
 
