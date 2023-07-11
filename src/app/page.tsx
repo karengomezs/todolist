@@ -106,9 +106,11 @@ export default function Home() {
           themeState.theme === true ? "text-white" : "text-slate-950"
         } `}
       >
-        What's up, {user?.firstName}!
+        {"What's up,"} {user?.firstName}!
       </p>
-      <p className="text-orange-500">Today's {today}</p>
+      <p className="text-orange-500">
+        {"Today's"} {today}
+      </p>
 
       <Form.Root
         className="flex gap-4 w-full"
