@@ -151,31 +151,35 @@ export default function Home() {
             : "[&>p>span]:text-slate-950"
         } `}
       >
-        <p className=" ">
+        <p>
           Todos:
           <span> {tasksList.length}</span>
         </p>
-        <p className=" ">
+        <p>
           Done:
           <span> {doneTasks.length}</span>
         </p>
-        <p className=" ">
+        <p>
           Pending:
           <span> {pendingTasks.length}</span>
         </p>
       </div>
 
-      <div className="flex flex-wrap md:flex-col gap-3 mt-5 p-3 bg-slate-900 rounded-md">
+      <div
+        className={`flex flex-wrap md:flex-col gap-3 mt-5 p-3 rounded-md ${
+          themeState.theme ? "bg-slate-900" : "bg-slate-300"
+        }  `}
+      >
         {tasksList.map((todo) => {
           return (
             <div
-              className="flex-1 p-2 font-bold text-lg text-white rounded-md bg-orange-500"
+              className="flex-1 p-2 font-bold text-lg rounded-md bg-orange-500"
               key={todo.id}
             >
               <p
                 className={`${
-                  todo.status === "done" ? "line-through" : ""
-                } pb-5`}
+                  themeState.theme ? "text-white" : "text-slate-950"
+                } ${todo.status === "done" ? "line-through" : ""} pb-5`}
               >
                 {todo.task}
               </p>
