@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     if (user?.id) {
       getTodos(user.id).then((data) => {
-        const todosArr = data?.docs.map((todo) => {
+        const todosArr = data?.docs.map((todo: any) => {
           const data = todo.data();
           return { id: todo.id, ...data };
         }) as Task[];
