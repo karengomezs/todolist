@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useUser } from "@clerk/nextjs";
 import * as Form from "@radix-ui/react-form";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import {
   updateStatusTask,
   updateTask,
 } from "@/api/tasks";
+import ThemeContext from "./context/theme-context";
 
 const schema = z.object({
   id: z.string().optional(),
@@ -23,6 +24,7 @@ export declare type TaskForm = z.infer<typeof schema>;
 type Task = TaskForm & { id: string };
 
 export default function Home() {
+  const themeState = useContext(ThemeContext);
   const { user } = useUser();
   const [tasksList, setTasksList] = useState<Task[]>([]);
 
