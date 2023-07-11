@@ -94,7 +94,7 @@ export default function Home() {
   });
 
   return (
-    <main className="bg-slate-950 h-screen flex flex-col gap-5 px-6 pt-14 w-full md:px-56">
+    <main className="bg-slate-950 h-full flex flex-col gap-5 px-6 py-14 w-full md:px-56">
       <p className="font-extrabold text-4xl text-white">
         What's up, {user?.firstName}!
       </p>
@@ -147,7 +147,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-3 mt-5 p-3 bg-slate-900 rounded-md">
+      <div className="flex flex-wrap md:flex-col gap-3 mt-5 p-3 bg-slate-900 rounded-md">
         {tasksList.map((todo) => {
           return (
             <div
