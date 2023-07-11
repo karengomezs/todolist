@@ -175,7 +175,7 @@ export default function Home() {
         {tasksList.map((todo) => {
           return (
             <div
-              className="flex-1 p-2 font-bold text-lg rounded-md bg-orange-500"
+              className="flex flex-col justify-between md:flex-row flex-1 p-2 font-bold text-lg rounded-md bg-orange-500"
               key={todo.id}
             >
               <p
