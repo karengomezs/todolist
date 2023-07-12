@@ -99,7 +99,7 @@ export default function Home() {
     <main
       className={`${
         themeState.theme === true ? "bg-slate-950" : "bg-slate-100"
-      }  min-h-full flex flex-col gap-5 px-6 py-14 w-full md:px-56`}
+      }  min-h-screen flex flex-col gap-5 px-6 py-14 w-full md:px-56`}
     >
       <p
         className={`font-extrabold text-4xl ${
