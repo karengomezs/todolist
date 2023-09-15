@@ -48,7 +48,7 @@ export default function Home() {
           const data = todo.data();
           return { id: todo.id, ...data };
         }) as Task[];
-        setTasksList(todosArr);
+        setTasksList(todosArr || []);
       });
     }
   }, [user?.id]);
@@ -87,11 +87,11 @@ export default function Home() {
   const date = new Date();
   const today = date.toDateString();
 
-  const doneTasks = tasksList.filter((task) => {
+  const doneTasks = tasksList?.filter((task) => {
     return task.status === "done";
   });
 
-  const pendingTasks = tasksList.filter((task) => {
+  const pendingTasks = tasksList?.filter((task) => {
     return task.status === "pending";
   });
 
@@ -155,15 +155,15 @@ export default function Home() {
       >
         <p>
           Todos:
-          <span> {tasksList.length}</span>
+          <span> {tasksList?.length}</span>
         </p>
         <p>
           Done:
-          <span> {doneTasks.length}</span>
+          <span> {doneTasks?.length}</span>
         </p>
         <p>
           Pending:
-          <span> {pendingTasks.length}</span>
+          <span> {pendingTasks?.length}</span>
         </p>
       </div>
 
@@ -172,7 +172,7 @@ export default function Home() {
           themeState.theme ? "bg-slate-900" : "bg-slate-300"
         }  `}
       >
-        {tasksList.map((todo) => {
+        {tasksList?.map((todo) => {
           return (
             <div
               className="flex flex-col justify-between md:flex-row flex-1 p-2 font-bold text-lg rounded-md bg-orange-500"
@@ -213,7 +213,7 @@ export default function Home() {
                   type="checkbox"
                   defaultChecked={todo.status === "done"}
                   onChange={async (e) => {
-                    const todoAtrapado = tasksList.find((task) => {
+                    const todoAtrapado = tasksList?.find((task) => {
                       return task.id === todo.id;
                     });
 
@@ -222,7 +222,7 @@ export default function Home() {
 
                       if (todoAtrapado?.status) {
                         todoAtrapado.status = "done";
-                        const withoutRepeatTask = tasksList.filter((task) => {
+                        const withoutRepeatTask = tasksList?.filter((task) => {
                           return task.id !== todoAtrapado.id;
                         });
                         const newListTasks = [
