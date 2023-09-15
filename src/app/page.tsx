@@ -48,6 +48,7 @@ export default function Home() {
           const data = todo.data();
           return { id: todo.id, ...data };
         }) as Task[];
+
         setTasksList(todosArr || []);
       });
     }
